@@ -2,7 +2,7 @@
 
 const Kanji = require('../model/kanji_model')
 const axios = require('axios')
-
+const BASE_URL = 'https://web-api-assignment-304cem.herokuapp.com'
 
 exports.getKanjiAliveConfig = () => {
 
@@ -139,7 +139,7 @@ exports.getAllKanji = async res => {
 exports.addKanji = async (word, res) => {
   let gotError = false
 
-  const kanjiDetailsUrl = `http://localhost:3000/getKanjiDetails/${encodeURIComponent(word)}`
+  const kanjiDetailsUrl = `${BASE_URL}/getKanjiDetails/${encodeURIComponent(word)}`
   
   const kanjiDetails = await axios.get(kanjiDetailsUrl).catch(err => {
     console.error(err)
@@ -151,7 +151,7 @@ exports.addKanji = async (word, res) => {
 
   const details = kanjiDetails['data']
 
-  const kanjiExamplesUrl = `http://localhost:3000/getKanjiExamples/${encodeURIComponent(details.kanji)}`
+  const kanjiExamplesUrl = `${BASE_URL}/getKanjiExamples/${encodeURIComponent(details.kanji)}`
 
   const kanjiExamples = await axios.get(kanjiExamplesUrl).catch(err => {
     console.error(err)
