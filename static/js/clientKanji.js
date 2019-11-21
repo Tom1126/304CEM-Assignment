@@ -1,4 +1,6 @@
- function loadKanjiFromSearch(kanji) {
+const BASE_URL = 'https://web-api-assignment-304cem.herokuapp.com'
+
+function loadKanjiFromSearch(kanji) {
    resetDiv('kanjisDiv')
 
    const kanjiArray = []
@@ -14,7 +16,7 @@
 
    resetDiv('kanjisDiv')
 
-   const kanjiList = await fetch('http://localhost:3000/getAllKanji').catch(err => null)
+   const kanjiList = await fetch(`${BASE_URL}/getAllKanji`).catch(err => null)
    const jsonKanjiList = Object.is(kanjiList, null) ? null : await kanjiList.json()
    if (Object.is(jsonKanjiList, null)) {
      //alert('Error loading kanjis from database')
@@ -180,7 +182,7 @@
    else {
      const encodedString = encodeURIComponent(kanjiToSearch)
      console.log(`Encodedstring: ${encodedString}`)
-     fetch(`http://localhost:3000/getSingleKanji/${encodedString}`)
+     fetch(`${BASE_URL}/getSingleKanji/${encodedString}`)
        .then(kanjiSearched => {
          return kanjiSearched.json()
        })

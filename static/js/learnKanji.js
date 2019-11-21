@@ -1,4 +1,5 @@
  //Add modal open and close modal
+ const BASE_URL = 'https://web-api-assignment-304cem.herokuapp.com'
  const addModal = document.querySelector('.add-main-modal');
  const addCloseButton = document.querySelectorAll('.add-modal-close');
 
@@ -150,7 +151,7 @@
 
    resetDiv('kanjisDiv')
 
-   const kanjiList = await fetch('http://localhost:3000/getAllKanji').catch(err => null)
+   const kanjiList = await fetch(`${BASE_URL}/getAllKanji`).catch(err => null)
    const jsonKanjiList = Object.is(kanjiList, null) ? null : await kanjiList.json()
    if (Object.is(jsonKanjiList, null)) {
      //alert('Error loading kanjis from database')
@@ -331,7 +332,7 @@
    } else {
      const encodedTextToAdd = encodeURIComponent(kanjiToAdd)
 
-     const isFromDatabase = await fetch(`http://localhost:3000/getSingleKanji/${encodedTextToAdd}`)
+     const isFromDatabase = await fetch(`${BASE_URL}/getSingleKanji/${encodedTextToAdd}`)
        .then(resp => resp.json())
        .then(jsonResp => jsonResp)
        .catch(err => {
@@ -359,7 +360,7 @@
        return
      }
 
-     fetch(`http://localhost:3000/addKanji/${encodedTextToAdd}`, {
+     fetch(`${BASE_URL}/addKanji/${encodedTextToAdd}`, {
          method: 'POST'
        })
        .then(() => {
@@ -381,7 +382,7 @@
  }
 
  function deleteKanji(encodedString) {
-   fetch(`http://localhost:3000/deleteKanji/${encodedString}`, {
+   fetch(`${BASE_URL}/deleteKanji/${encodedString}`, {
        method: 'DELETE'
      })
      .then(() => {
@@ -413,7 +414,7 @@
    } else {
      const encodedString = encodeURIComponent(kanjiToSearch)
      console.log(`Encodedstring: ${encodedString}`)
-     fetch(`http://localhost:3000/getSingleKanji/${encodedString}`)
+     fetch(`${BASE_URL}/getSingleKanji/${encodedString}`)
        .then(kanjiSearched => {
          return kanjiSearched.json()
        })
@@ -434,7 +435,7 @@
  }
 
  async function deleteAllKanji() {
-   fetch('http://localhost:3000/deleteAllKanji', {
+   fetch(`${BASE_URL}/deleteAllKanji`, {
        method: 'DELETE'
      })
      .then(response => {
@@ -527,7 +528,7 @@
 
        console.log(newKanjiObject)
 
-       fetch(`http://localhost:3000/updateKanji/${newKanjiObject.encodedString}`, {
+       fetch(`${BASE_URL}/updateKanji/${newKanjiObject.encodedString}`, {
            method: "PUT",
            body: JSON.stringify(newKanjiObject),
            headers: {
@@ -554,7 +555,7 @@
 
        newKanjiObject.encodedString = encodedNewEncodedString
 
-       const isFromDatabase = await fetch(`http://localhost:3000/getSingleKanji/${newEncodedString}`)
+       const isFromDatabase = await fetch(`${BASE_URL}/getSingleKanji/${newEncodedString}`)
          .then(resp => resp.json())
          .then(jsonResp => jsonResp)
          .catch(err => {
@@ -582,7 +583,7 @@
          return
        }
 
-       const newKanjiDetails = await fetch(`http://localhost:3000/getKanjiDetails/${newKanjiObject.encodedString}`)
+       const newKanjiDetails = await fetch(`${BASE_URL}/getKanjiDetails/${newKanjiObject.encodedString}`)
          .then(resp => {
            return resp.json()
          })
@@ -599,7 +600,7 @@
          return
        }
 
-       const newKanjiExamples = await fetch(`http://localhost:3000/getKanjiExamples/${newKanjiObject.encodedString}`)
+       const newKanjiExamples = await fetch(`${BASE_URL}/getKanjiExamples/${newKanjiObject.encodedString}`)
          .then(resp => resp.json())
          .then(jsonResp => jsonResp)
          .catch(err => null)
@@ -621,7 +622,7 @@
        newKanjiObject.meanings = newKanjiDetails.meanings
        newKanjiObject.readings = newKanjiDetails.on_readings
 
-       fetch(`http://localhost:3000/updateKanji/${checkEncodedString}`, {
+       fetch(`${BASE_URL}/updateKanji/${checkEncodedString}`, {
            method: "PUT",
            body: JSON.stringify(newKanjiObject),
            headers: {
