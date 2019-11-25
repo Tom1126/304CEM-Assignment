@@ -72,6 +72,9 @@ addModalListeners('delete-favourite')
 addModalListeners('deleteAllFavourite')
 
 function loadKanjiFromSearch(kanji) {
+  
+  document.getElementById('userDiv').style.display = 'none'
+  document.getElementById('homeDiv').style.display = ''
   resetDiv('kanjisDiv')
 
   const kanjiArray = []
@@ -92,6 +95,7 @@ async function getKanjiFromDatabase() {
   }
 
   resetDiv('kanjisDiv')
+  document.getElementById('userDiv').style.display = 'none'
 
   const kanjiList = await fetch(`${BASE_URL}/getAllKanji`).catch(err => null)
   const jsonKanjiList = Object.is(kanjiList, null) ? null : await kanjiList.json()
@@ -201,13 +205,22 @@ function loadKanjisToDiv(kanjiList, elementId, isFavouritesList) {
     `
       }
 
-    } else if (Object.is(isFavouritesList, true) && Object.is(isLogined, 'true')) {
-      kanjiListElement += `
+
+    } else if (Object.is(isFavouritesList, true)) {
+
+      const isLogined = sessionStorage.getItem('isLogined')
+
+      console.log(`isLogined: ${isLogined}`)
+      if (Object.is(isLogined, 'true')) {
+        kanjiListElement += `
     <div id="deleteFavouritesDiv${i}" class="flex kanjiDels">
       <button id="deleteFavBtn" onclick='openDeleteFavModal(${i})' class="pull-right bg-red-500 hover:bg-red-400 text-white font-semibold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded">Delete Favourite</button>
       <div class="px-3"></div>
       </div>
     `
+      }
+
+
     }
 
     kanjiListElement +=
@@ -273,7 +286,7 @@ function searchKanji() {
   const kanjiToSearch = document.getElementById('searchBox').value.trim()
 
   if (kanjiToSearch.length > 1) {
-    
+
     Swal.fire({
       icon: 'error',
       title: 'Single kanji only',
@@ -281,15 +294,15 @@ function searchKanji() {
     })
 
   } else if (kanjiToSearch.length === 0) {
-  
+
     document.getElementById('searchBox').value = ''
     getKanjiFromDatabase()
-  
+
   } else {
-  
+
     document.getElementById('searchBox').value = ''
     const encodedString = encodeURIComponent(kanjiToSearch)
-    
+
     fetch(`${BASE_URL}/getSingleKanji/${encodedString}`)
       .then(kanjiSearched => {
         return kanjiSearched.json()
@@ -333,7 +346,7 @@ function loginUser() {
       })
       .then(jsonResult => {
         const result = jsonResult
-        
+
         // Clears the user input
         document.getElementById('loginEmailTxt').value = ''
         document.getElementById('loginPasswordTxt').value = ''
@@ -415,7 +428,7 @@ function registerUser() {
     .then(result => result.json())
     .then(jsonResult => {
       const authResult = jsonResult
-      
+
       // Clear the user inputs
       document.getElementById('registerEmailTxt').value = ''
       document.getElementById('registerPasswordTxt').value = ''
@@ -499,10 +512,8 @@ async function resetPassword() {
           console.error(err)
         })
 
-    }
+    } else {
 
-    else {
-      
       //Send an alert to let the user know
       //that the email is not in database
 
@@ -514,9 +525,7 @@ async function resetPassword() {
 
     }
 
-  }
-
-  else {
+  } else {
 
     //Sends an alert to user that email is empty
     Swal.fire({
@@ -539,7 +548,7 @@ function updatePassword() {
   const passwordObj = {
     "password": document.getElementById('newPasswordTextBox').value
   }
-  
+
   fetch(resetUrl, {
       method: "POST",
       body: JSON.stringify(passwordObj),
@@ -598,6 +607,11 @@ function logout() {
   toggleLoginVisible(true)
   getKanjiFromDatabase()
   makeModalDisapper('logout')
+  
+  document.getElementById('greetMsg').innerText = `Hi, User`
+  document.getElementById('userDiv').style.display = 'none'
+  document.getElementById('homeDiv').style.display = ''
+
 
 }
 
@@ -605,12 +619,17 @@ function logout() {
  * Function to log out user after reseting password
  */
 function resetPasswordLogOut() {
+  
   sessionStorage.removeItem('token')
   sessionStorage.removeItem('isLogined')
   sessionStorage.removeItem('userType')
   sessionStorage.removeItem('email')
   toggleLoginVisible(true)
+  getKanjiFromDatabase()
   document.getElementById('greetMsg').innerText = `Hi, User`
+  document.getElementById('userDiv').style.display = 'none'
+  document.getElementById('homeDiv').style.display = ''
+
 }
 
 /**
@@ -644,7 +663,8 @@ function deleteAccount() {
  * Function to load user favourites from home page
  */
 async function getUserFavouritesFromDatabase() {
-  
+
+  document.getElementById('userDiv').style.display = ''
   resetDiv('userFavourites')
 
   const token = sessionStorage.getItem('token')
@@ -656,7 +676,7 @@ async function getUserFavouritesFromDatabase() {
   }).catch(err => null)
 
   const jsonKanjiList = Object.is(kanjiList, null) ? null : await kanjiList.json()
-  
+
   if (Object.is(jsonKanjiList, null)) {
     // Alerts user about error loading user favourites
     Swal.fire({
@@ -843,10 +863,10 @@ async function addKanji() {
   if (kanjiToAdd.length > 1) {
     //swal(`Single kanji only`)
     Swal.fire({
-     icon: 'error',
-     title: 'Single Kanji Only',
-     text: 'Please enter only 1 kanji'
-   })
+      icon: 'error',
+      title: 'Single Kanji Only',
+      text: 'Please enter only 1 kanji'
+    })
   } else {
     const encodedTextToAdd = encodeURIComponent(kanjiToAdd)
 
@@ -861,20 +881,20 @@ async function addKanji() {
     if (Object.is(isFromDatabase, "gotError")) {
       //alert('Check if kanji exists in database error. Try again later')
       Swal.fire({
-       icon: 'error',
-       title: 'Check kanji error',
-       text: 'Check if kanji exists in database error. Try again later'
-     })
+        icon: 'error',
+        title: 'Check kanji error',
+        text: 'Check if kanji exists in database error. Try again later'
+      })
       return
     }
 
     if (!Object.is(isFromDatabase, null)) {
       //alert('Kanji already exists in database. Enter another kanji not in database.')
       Swal.fire({
-       icon: 'error',
-       title: 'Kanji already exists in database',
-       text: 'Kanji already exists in database. Please enter another kanji not in database.'
-     })
+        icon: 'error',
+        title: 'Kanji already exists in database',
+        text: 'Kanji already exists in database. Please enter another kanji not in database.'
+      })
       return
     }
 
@@ -888,10 +908,10 @@ async function addKanji() {
       .catch(err => {
         console.error(err)
         Swal.fire({
-         icon: 'error',
-         title: 'Error adding kanji',
-         text: 'Kanji failed to be added to database. Please try again later.'
-       })
+          icon: 'error',
+          title: 'Error adding kanji',
+          text: 'Kanji failed to be added to database. Please try again later.'
+        })
         addModalClose()
       })
 
