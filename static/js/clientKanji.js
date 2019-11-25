@@ -194,16 +194,16 @@ function loadKanjisToDiv(kanjiList, elementId, isFavouritesList) {
       const isLogined = sessionStorage.getItem('isLogined')
       if (Object.is(isLogined, 'true')) {
         kanjiListElement += `
-    <div id="addToFavouritesDiv${i}" class="flex">
+    <div id="addToFavouritesDiv${i}" class="flex kanjiFavs">
       <button id="addToFavouritesBtn" onclick='saveToFavourite(${i})' class="pull-right bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">Add to Favourites</button>
       <div class="px-3"></div>
       </div>
     `
       }
 
-    } else if (Object.is(isFavouritesList, true)) {
+    } else if (Object.is(isFavouritesList, true) && Object.is(isLogined, 'true')) {
       kanjiListElement += `
-    <div id="deleteFavouritesDiv${i}" class="flex">
+    <div id="deleteFavouritesDiv${i}" class="flex kanjiDels">
       <button id="deleteFavBtn" onclick='openDeleteFavModal(${i})' class="pull-right bg-red-500 hover:bg-red-400 text-white font-semibold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded">Delete Favourite</button>
       <div class="px-3"></div>
       </div>
@@ -598,7 +598,6 @@ function logout() {
   toggleLoginVisible(true)
   getKanjiFromDatabase()
   makeModalDisapper('logout')
-  document.getElementById('greetMsg').innerText = `Hi, User`
 
 }
 
