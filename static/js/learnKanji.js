@@ -1,5 +1,6 @@
  //Add modal open and close modal
  const BASE_URL = 'https://web-api-assignment-304cem.herokuapp.com'
+ 
  const addModal = document.querySelector('.add-main-modal');
  const addCloseButton = document.querySelectorAll('.add-modal-close');
 
@@ -655,5 +656,17 @@
     }
 
  }
+
+ /**
+  * Function to logout
+  */
+ function logout() {
+
+  sessionStorage.removeItem('token')
+  sessionStorage.removeItem('isLogined')
+  sessionStorage.removeItem('userType')
+  document.location.href = '/client'
+
+}
 
  document.onload = getKanjiFromDatabase()

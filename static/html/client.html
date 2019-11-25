@@ -79,9 +79,8 @@
         <div class="w-full container mx-auto flex flex-wrap items-center mt-0 pt-3 pb-3 md:pb-0">
 
             <div class="w-1/2 pl-2 md:pl-0">
-                <a 
-                onclick="getKanjiFromDatabase()"
-                class="text-gray-100 text-base xl:text-xl no-underline hover:no-underline font-bold" href="#">
+                <a onclick="getKanjiFromDatabase()"
+                    class="text-gray-100 text-base xl:text-xl no-underline hover:no-underline font-bold" href="#">
                     Learn Kanji - learn kanji details one kanji at a time
                 </a>
             </div>
@@ -91,7 +90,7 @@
                     <div class="relative text-sm text-gray-100">
                         <button id="userButton" class="flex items-center focus:outline-none mr-3">
                             <img class="w-8 h-8 rounded-full mr-4" src="http://i.pravatar.cc/300" alt="Avatar of User">
-                            <span class="hidden md:inline-block text-gray-100">Hi, User</span>
+                            <span id="greetMsg" class="hidden md:inline-block text-gray-100">Hi, User</span>
                             <svg class="pl-2 h-2 fill-current text-gray-100" version="1.1"
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129"
                                 xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 129 129">
@@ -104,16 +103,21 @@
                         <div id="userMenu"
                             class="bg-gray-900 rounded shadow-md mt-2 absolute mt-12 top-0 right-0 min-w-full overflow-auto z-30 invisible">
                             <ul class="list-reset">
-                                <li><a href="#"
-                                        class="px-4 py-2 block text-gray-100 hover:bg-gray-800 no-underline hover:no-underline">My
-                                        account</a></li>
-                                <li><a href="#"
-                                        class="px-4 py-2 block text-gray-100 hover:bg-gray-800 no-underline hover:no-underline">Notifications</a>
+                                <li><a id="loginLnk" href="#"
+                                        class="px-4 py-2 block text-gray-100 hover:bg-gray-800 no-underline hover:no-underline">Login</a>
                                 </li>
-                                <li>
-                                    <hr class="border-t mx-2 border-gray-400">
+                                <li><a id="registerLnk" href="#"
+                                        class="px-4 py-2 block text-gray-100 hover:bg-gray-800 no-underline hover:no-underline">Register</a>
                                 </li>
-                                <li><a href="#"
+                                <li><a id="resetLnk" href="#"
+                                        class="px-4 py-2 block text-gray-100 hover:bg-gray-800 no-underline hover:no-underline">Reset
+                                        password</a>
+                                </li>
+                                <li><a id="deleteLnk" href="#" style="display: none;"
+                                        class="px-4 py-2 block text-gray-100 hover:bg-gray-800 no-underline hover:no-underline">Delete
+                                        account</a>
+                                </li>
+                                <li><a id="logoutLnk" href="#" style="display: none;"
                                         class="px-4 py-2 block text-gray-100 hover:bg-gray-800 no-underline hover:no-underline">Logout</a>
                                 </li>
                             </ul>
@@ -138,11 +142,19 @@
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 bg-gray-900 z-20"
                 id="nav-content">
                 <ul class="list-reset lg:flex flex-1 items-center px-4 md:px-0">
-                    <li class="mr-6 my-2 md:my-0">
+                    <li id="homeLnk" class="mr-6 my-2 md:my-0">
                         <a href="#" onclick="getKanjiFromDatabase()"
-                            class="block py-1 md:py-3 pl-1 align-middle text-blue-400 no-underline hover:text-gray-100 border-b-2 border-blue-400 hover:border-blue-400">
+                            class="block py-1 md:py-3 pl-1 align-middle text-blue-400 no-underline hover:text-gray-100 border-blue-400 hover:border-blue-400">
                             <i class="fas fa-home fa-fw mr-3 text-blue-400"></i><span
                                 class="pb-1 md:pb-0 text-sm">Home</span>
+                        </a>
+                    </li>
+                    <li id="favLnk" style="display: none;" class="mr-6 my-2 md:my-0">
+                        <a href="#" onclick="toggleFavouriteTab(false);getUserFavouritesFromDatabase();"
+                            id="userFavouritesLnk"
+                            class="block py-1 md:py-3 pl-1 align-middle text-yellow-400 no-underline hover:text-yellow-100 border-b-2 border-gray-900 hover:border-yellow-400">
+                            <i class="fas fa-star fa-fw mr-3 text-yellow-400"></i><span
+                                class="pb-1 md:pb-0 text-sm">Favourites</span>
                         </a>
                     </li>
                 </ul>
@@ -167,9 +179,17 @@
     </nav>
 
     <!--Container-->
-    <div class="container w-full mx-auto">
+    <div id="homeDiv" class="container w-full mx-auto">
 
         <div class="w-full px-4 md:px-0 md:mt-8 mb-16 text-gray-800 leading-normal">
+
+            <div id="addDiv" 
+            style="display:none;"
+            class="p-5 flex justify-center">
+                <button onclick="openAddModal()"
+                    class="bg-teal-600 hover:bg-teal-500 text-white font-semibold py-2 px-4 border-b-4 border-teal-700 hover:border-teal-500 rounded">Add
+                    Kanji</button>
+            </div>
 
             <div id="kanjisDiv">
             </div>
@@ -177,6 +197,355 @@
         </div>
     </div>
     <!--/container-->
+
+    <!--User favourites-->
+    <div style="display:none;" id="userDiv" class="container w-full mx-auto">
+
+        <div class="w-full px-4 md:px-0 md:mt-8 mb-16 text-gray-800 leading-normal">
+
+            <div class="p-5 flex justify-center">
+                <button onclick="makeModalAppear('deleteAllFavourite')"
+                    class="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded">Delete
+                    All Kanji</button>
+            </div>
+
+            <div id="userFavourites">
+            </div>
+
+        </div>
+    </div>
+    <!--End user favourites-->
+
+    <!--Login Modal-->
+    <div id="loginModal"
+        class="login-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Login</p>
+                    <div class="login-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Email</p>
+                    <input id="loginEmailTxt" type="email" placeholder="Enter email" />
+                    <br />
+                    <p>Password</p>
+                    <input id="loginPasswordTxt" min="8" type="password" placeholder="Enter password" />
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none login-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="loginBtn" onclick="loginUser()"
+                        class="focus:outline-none px-4 bg-blue-500 p-3 ml-3 rounded-lg text-white hover:bg-blue-400">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End login modal-->
+
+    <!--Register Modal-->
+    <div id="registerModal"
+        class="register-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Register</p>
+                    <div class="register-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Enter new email</p>
+                    <input id="registerEmailTxt" type="email" placeholder="Enter email" />
+                    <br />
+                    <p>Enter new password</p>
+                    <input id="registerPasswordTxt" min="8" type="password" placeholder="Enter password" />
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none register-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="registerBtn" onclick="registerUser()"
+                        class="focus:outline-none px-4 bg-blue-500 p-3 ml-3 rounded-lg text-white hover:bg-blue-400">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End register modal-->
+
+    <!--Logout Modal-->
+    <div id="logoutModal"
+        class="logout-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Logout</p>
+                    <div class="logout-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Are you sure to logout?</p>
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none logout-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="logoutBtn" onclick="logout()"
+                        class="focus:outline-none px-4 bg-red-500 p-3 ml-3 rounded-lg text-white hover:bg-red-400">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End logout modal-->
+
+    <!--Reset Password modal-->
+    <div id="resetModal"
+        class="reset-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Reset Password</p>
+                    <div class="reset-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Enter email to reset password</p>
+                    <input id="resetEmailTextBox" type="email" placeholder="Enter email" value="" />
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none reset-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="confirmResetBtn" onclick="resetPassword()"
+                        class="focus:outline-none px-4 bg-blue-500 p-3 ml-3 rounded-lg text-white hover:bg-blue-400">Reset
+                        password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End reset password modal-->
+
+    <!--New Password modal-->
+    <div id="newPasswordModal"
+        class="newPassword-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Reset Password</p>
+                    <div class="newPassword-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Enter new password</p>
+                    <input id="resetUrl" type="hidden" value="" />
+                    <input id="newPasswordTextBox" type="password" min="8" placeholder="Enter new password" value="" />
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none reset-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="newPasswordBtn" onclick="updatePassword()"
+                        class="focus:outline-none px-4 bg-blue-500 p-3 ml-3 rounded-lg text-white hover:bg-blue-400">Reset
+                        password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End New password modal-->
+
+    <!--Delete account Modal-->
+    <div id="deleteAccountModal"
+        class="delete-account-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Delete Account</p>
+                    <div class="delete-account-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Are you sure to delete account?</p>
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none delete-account-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="deleteAccountBtn" onclick="deleteAccount()"
+                        class="focus:outline-none px-4 bg-red-500 p-3 ml-3 rounded-lg text-white hover:bg-red-400">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End delete account modal-->
+
+    <!--Delete favourite Modal-->
+    <div id="deleteFavouriteModal"
+        class="delete-favourite-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Delete Favourite</p>
+                    <div class="delete-account-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Are you sure to delete this favourite?</p>
+                    <input id="curFavIndex" type="hidden" value="" />
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none delete-favourite-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="deleteFavouriteBtn" onclick="deleteUserFavourite()"
+                        class="focus:outline-none px-4 bg-red-500 p-3 ml-3 rounded-lg text-white hover:bg-red-400">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End delete favourite modal-->
+
+    <!--Delete all user favourite Modal-->
+    <div id="deleteAllFavouriteModal"
+        class="deleteAllFavourite-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Delete Favourite</p>
+                    <div class="deleteAllFavourite-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Are you sure to delete all favourites?</p>
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none deleteAllFavourite-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button id="deleteAllFavouriteBtn" onclick="deleteAllUserFavourites()"
+                        class="focus:outline-none px-4 bg-red-500 p-3 ml-3 rounded-lg text-white hover:bg-red-400">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End delete all user favourite modal-->
+
+    <!--Add Modal-->
+    <div id="addModal"
+        class="add-main-modal fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center animated fadeIn faster"
+        style="background: rgba(0,0,0,.7);">
+        <div
+            class="border border-teal-500 shadow-lg modal-container bg-white w-11/12 md:max-w-xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <div class="modal-content py-4 text-left px-6">
+                <!--Title-->
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">Add Kanji</p>
+                    <div class="add-modal-close cursor-pointer z-50">
+                        <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                            viewBox="0 0 18 18">
+                            <path
+                                d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+                <!--Body-->
+                <div class="my-5">
+                    <p>Enter kanji to add. (Single kanji only) </p>
+                    <input id="addKanjiTextBox" type="text" placeholder="Ex: 月，私" value="" />
+                </div>
+                <!--Footer-->
+                <div class="flex justify-end pt-2">
+                    <button
+                        class="focus:outline-none add-modal-close px-4 bg-gray-400 p-3 rounded-lg text-black hover:bg-gray-300">Cancel</button>
+                    <button onclick="addKanji()"
+                        class="focus:outline-none px-4 bg-teal-500 p-3 ml-3 rounded-lg text-white hover:bg-teal-400">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Add modal-->
+
 
     <footer class="bg-gray-900 border-t border-gray-400 shadow">
         <div class="container max-w-md mx-auto flex py-8">
@@ -186,7 +555,8 @@
                     <div class="px-8">
                         <h3 class="font-bold font-bold text-gray-100">About</h3>
                         <p class="py-4 text-gray-600 text-sm">
-                            Learn Kanji can help search for kanji details and examples. The kanji added will have the JLPT level,
+                            Learn Kanji can help search for kanji details and examples. The kanji added will have the
+                            JLPT level,
                             examples and audio to help you learn faster and more effecitvely.
                             Learning kanji can now be easy.
                         </p>
@@ -198,6 +568,38 @@
 
         </div>
     </footer>
+
+    <script>
+        const addModal = document.querySelector('.add-main-modal');
+
+        const addCloseButton = document.querySelectorAll('.add-modal-close');
+
+        const addModalClose = () => {
+            addModal.classList.remove('fadeIn');
+            addModal.classList.add('fadeOut');
+            setTimeout(() => {
+                addModal.style.display = 'none';
+            }, 500);
+        }
+        const openAddModal = () => {
+            addModal.classList.remove('fadeOut');
+            addModal.classList.add('fadeIn');
+            addModal.style.display = 'flex';
+        }
+
+        for (let i = 0; i < addCloseButton.length; i++) {
+
+            const elements = addCloseButton[i];
+
+            elements.onclick = (e) => addModalClose();
+
+            addModal.style.display = 'none';
+
+            window.onclick = function (event) {
+                if (event.target == addModal) addModalClose();
+            }
+        }
+    </script>
 
     <script>
         /*Toggle dropdown list*/
@@ -260,6 +662,19 @@
     </script>
 
     <script src="../js/clientKanji.js"></script>
+
+    <script>
+        //Help check if the user is already logined then no need to relogin again
+        //if the user has already logined
+        const isLogined = sessionStorage.getItem('isLogined')
+
+        if(Object.is(isLogined, 'true')) {
+            toggleLoginVisible(false)
+            const email = sessionStorage.getItem('email')
+            document.getElementById('greetMsg').innerText = email 
+        }
+    </script>
+
 </body>
 
 </html>

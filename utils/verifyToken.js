@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const secret = process.env.SECRET
 
-function verifyToken(req, res, next) {
+exports.verifyToken = function(req, res, next){
   const token = req.headers['x-access-token']
 
   if(!token)
@@ -12,9 +12,10 @@ function verifyToken(req, res, next) {
   jwt.verify(token, secret, function(err, decoded) {
     if(err) return res.status(500).send( {auth: false, message: 'Failed to authenticate token'})
   
+    console.log(`Decoded UserType: ${decoded.userType}`)
+    console.log(`Decoded: ${JSON.stringify(decoded)}`)
+
     req.userId = decoded.id 
     next()
   })
 }
-
-module.exports = verifyToken

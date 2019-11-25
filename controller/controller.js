@@ -8,10 +8,6 @@ const userUtils = require('../utils/userUtils')
 
 // All Html functions
 
-exports.greetUser = (req, res, next) => {
-  res.send(`API is now live.`)
-}
-
 exports.goToHomePage = (req, res, next) => {
   res.sendFile("learnKanji.html", {root: path.join(__dirname, "../static/html")})
 }
@@ -118,4 +114,50 @@ exports.updateKanjiInDatabase = (req, res) => {
     utils.updateKanji(encodedKanjiWord, req, res)
   }
   
+}
+
+exports.getUserFavourites = (req, res) => {
+  userUtils.getUserFavourites(req, res)
+}
+
+exports.updateUserFavourites = (req, res) => {
+  userUtils.updateUserFavourites(req, res)
+}
+
+/**
+ * Function to delete user from database
+ */
+exports.deleteUser = (req, res) => {
+
+  userUtils.deleteUser(req, res)
+
+}
+
+/**
+ * Function to add kanji to user favourite
+ */
+exports.addUserFavouriteKanji = (req, res) => {
+  userUtils.addUserFavourite(req, res)
+}
+
+/**
+ * Function to delete user favourite from database
+ */
+exports.deleteUserFavourite = (req, res) => {
+  userUtils.deleteUserFavourite(req, res)
+}
+
+/**
+ * Function to delete all user favourites
+ */
+exports.deleteAllUserFavourites = (req, res) => {
+  userUtils.deleteAllUserFavourite(req, res)
+}
+
+/**
+ * Function to find user in database using email
+ */
+
+exports.findUserInDatabase = (req, res) => {
+  userUtils.findUserInDatabase(req, res)
 }
