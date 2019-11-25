@@ -96,7 +96,7 @@ async function getKanjiFromDatabase() {
   const kanjiList = await fetch(`${BASE_URL}/getAllKanji`).catch(err => null)
   const jsonKanjiList = Object.is(kanjiList, null) ? null : await kanjiList.json()
   if (Object.is(jsonKanjiList, null)) {
-    //alert('Error loading kanjis from database')
+    //Gives user an alert about loading failed
     Swal.fire({
       icon: 'error',
       title: 'Error loading kanjis from database',
@@ -155,6 +155,10 @@ function createKanjiElement(kanji) {
   return kanjiListElement
 }
 
+/**
+ * Function to join all readings into a single string
+ * @param {Array[]} readings array of readings of the kaji
+ */
 function joinKanjiMeanings(readings) {
   let joinedString = ''
   for (const reading of readings) joinedString += `${reading}, `
@@ -317,7 +321,7 @@ function loginUser() {
 
   if (!Object.is(email.trim(), '') && !Object.is(password.trim(), '')) {
 
-    fetch('http://localhost:3000/login', {
+    fetch(`${BASE_URL}/login`, {
         method: "POST",
         body: JSON.stringify(loginObj),
         headers: {
@@ -353,7 +357,7 @@ function loginUser() {
           if (Object.is(userType, `admin`)) {
 
 
-            document.location.href = 'http://localhost:3000/admin'
+            document.location.href = `${BASE_URL}/admin`
 
           } else {
             makeModalDisapper('login')
@@ -388,7 +392,11 @@ function loginUser() {
 
 }
 
+/**
+ * Function to register user
+ */
 function registerUser() {
+
   const emailToRegister = document.getElementById('registerEmailTxt').value
   const passwordToRegister = document.getElementById('registerPasswordTxt').value
 
@@ -397,7 +405,7 @@ function registerUser() {
     "password": passwordToRegister
   }
 
-  fetch('http://localhost:3000/register', {
+  fetch(`${BASE_URL}/register`, {
       method: "POST",
       body: JSON.stringify(registerObj),
       headers: {
@@ -446,7 +454,7 @@ async function resetPassword() {
       "email": email
     }
 
-    const checkUser = await fetch('http://localhost:3000/findUserInDatabase', {
+    const checkUser = await fetch(`${BASE_URL}/findUserInDatabase`, {
         method: 'POST',
         body: JSON.stringify(emailObj),
         headers: {
@@ -460,7 +468,7 @@ async function resetPassword() {
 
     if (Object.is(checkUser.error, false)) {
 
-      fetch(`http://localhost:3000/resetPassword/${email}`, {
+      fetch(`${BASE_URL}/resetPassword/${email}`, {
           method: "POST"
         })
         .then(result => result.json())
@@ -510,6 +518,7 @@ async function resetPassword() {
 
   else {
 
+    //Sends an alert to user that email is empty
     Swal.fire({
       icon: 'error',
       title: 'Email field empty',
@@ -520,13 +529,17 @@ async function resetPassword() {
 
 }
 
+/**
+ * Function to update password
+ */
+
 function updatePassword() {
+
   const resetUrl = document.getElementById('resetUrl').value
   const passwordObj = {
     "password": document.getElementById('newPasswordTextBox').value
   }
-  console.log(`Reset Url: ${resetUrl}`)
-  console.log(JSON.stringify(passwordObj))
+  
   fetch(resetUrl, {
       method: "POST",
       body: JSON.stringify(passwordObj),
@@ -606,7 +619,7 @@ function resetPasswordLogOut() {
 function deleteAccount() {
   const token = sessionStorage.getItem('token')
 
-  fetch('http://localhost:3000/deleteUser', {
+  fetch(`${BASE_URL}/deleteUser`, {
       method: 'DELETE',
       headers: {
         'x-access-token': token
@@ -631,18 +644,21 @@ function deleteAccount() {
  * Function to load user favourites from home page
  */
 async function getUserFavouritesFromDatabase() {
+  
   resetDiv('userFavourites')
 
   const token = sessionStorage.getItem('token')
 
-  const kanjiList = await fetch(`http://localhost:3000/getUserFavourites`, {
+  const kanjiList = await fetch(`${BASE_URL}/getUserFavourites`, {
     headers: {
       "x-access-token": token
     }
   }).catch(err => null)
+
   const jsonKanjiList = Object.is(kanjiList, null) ? null : await kanjiList.json()
+  
   if (Object.is(jsonKanjiList, null)) {
-    //alert('Error loading kanjis from database')
+    // Alerts user about error loading user favourites
     Swal.fire({
       icon: 'error',
       title: 'Error loading kanjis from database',
@@ -651,6 +667,7 @@ async function getUserFavouritesFromDatabase() {
   } else {
     loadKanjisToDiv(jsonKanjiList.reverse(), 'userFavourites', true)
   }
+
 }
 
 /**
@@ -668,7 +685,7 @@ async function saveToFavourite(index) {
     const token = sessionStorage.getItem('token')
 
     let isFavAlreadyExists = false
-    const kanjiList = await fetch(`http://localhost:3000/getUserFavourites`, {
+    const kanjiList = await fetch(`${BASE_URL}/getUserFavourites`, {
       headers: {
         "x-access-token": token
       }
@@ -685,7 +702,7 @@ async function saveToFavourite(index) {
     }
 
     if (!isFavAlreadyExists) {
-      fetch('http://localhost:3000/addUserFavourite', {
+      fetch(`${BASE_URL}/addUserFavourite`, {
           method: "POST",
           body: JSON.stringify(kanjiObj),
           headers: {
@@ -738,7 +755,7 @@ function deleteUserFavourite() {
     }
     const token = sessionStorage.getItem('token')
 
-    fetch('http://localhost:3000/deleteUserFavourite', {
+    fetch(`${BASE_URL}/deleteUserFavourite`, {
         method: "DELETE",
         body: JSON.stringify(kanjiObj),
         headers: {
@@ -780,7 +797,7 @@ function deleteAllUserFavourites() {
 
     const token = sessionStorage.getItem('token')
 
-    fetch('http://localhost:3000/deleteAllUserFavourites', {
+    fetch(`${BASE_URL}/deleteAllUserFavourites`, {
         method: "DELETE",
         headers: {
           "x-access-token": token,

@@ -1,19 +1,23 @@
+const BASE_URL = `https://web-api-assignment-304cem.herokuapp.com`
+
 function resetPassword() {
   const newPassword = document.getElementById('newPasswordTextBox').value
   const confirmPassword = document.getElementById('confirmPasswordTextBox').value
 
   if (Object.is(newPassword, confirmPassword) &&
-    (newPassword.trim() === '' && confirmPassword.trim() === '')) {
+    (newPassword.trim() !== '' && confirmPassword.trim() !== '')) {
     const passwordObj = {
       "password": newPassword
     }
 
     const pathname = window.location.pathname
 
-    console.log(pathname)
+    const pathnameArr = pathname.split('/')
 
-    /*
-    fetch('http://localhost:3000/', {
+    const userId = pathnameArr[2]
+    const token = pathnameArr[3]
+    
+    fetch(`${BASE_URL}/receiveNewPassword/${userId}/${token}`, {
         method: "POST",
         body: JSON.stringify(passwordObj),
         headers: {
@@ -22,29 +26,25 @@ function resetPassword() {
       })
       .then(result => result.json())
       .then(jsonResult => {
-        console.log(jsonResult)
-        const newPasswordModal = document.getElementsByClassName('newPassword-main-modal')[0]
+        
 
-        newPasswordModal.classList.remove('fadeIn');
-        newPasswordModal.classList.add('fadeOut');
-        setTimeout(() => {
-          newPaswordModal.style.display = 'none';
-        }, 500);
-
-        resetPasswordLogOut()
+        Swal.fire({
+          icon: 'success',
+          title: 'Password change success',
+          text: 'Password changed successfuly. Now redirecting to home page...'
+        })
+        document.location.href = '/client' 
 
       })
       .catch(err => {
         console.error(err)
       })
-  }
-  else {
-    Swal.fire({
+  
+    } else {
+   
+      Swal.fire({
       icon: 'error',
       title: 'Passwords not same',
       text: 'Please ensure that both passwords are the same.'
     })
   }
-  */
-  }
-}

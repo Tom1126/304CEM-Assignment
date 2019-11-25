@@ -39,6 +39,7 @@ router.post('/findUserInDatabase', controller.findUserInDatabase)
 router.put('/updateKanji/:kanji', verifyToken, checkAdminUser, controller.updateKanjiInDatabase)
 router.put('/updateUserFavourites', verifyToken, controller.updateUserFavourites)
 
+// All DELETE routes
 router.delete('/deleteKanji/:kanji', verifyToken, checkAdminUser, controller.deleteKanjiInDatabase)
 router.delete('/deleteAllKanji', verifyToken, checkAdminUser, controller.deleteAllKanji)
 router.delete('/deleteUser', verifyToken, getUserDetails, controller.deleteUser)

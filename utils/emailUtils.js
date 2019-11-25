@@ -3,6 +3,7 @@ require('dotenv').config({
 })
 
 const nodemailer = require('nodemailer')
+const BASE_URL = `https://web-api-assignment-304cem.herokuapp.com`
 
 exports.transporter = nodemailer.createTransport({
   service: "gmail",
@@ -13,7 +14,7 @@ exports.transporter = nodemailer.createTransport({
 })
 
 exports.getPasswordResetURL = (user, token) => 
-  `http://localhost:3000/changeNewPassword/${user._id}/${token}`
+  `${BASE_URL}/changeNewPassword/${user._id}/${token}`
 
 exports.resetPasswordTemplate = (user, url) => {
   const from = process.env.EMAIL_LOGIN 
