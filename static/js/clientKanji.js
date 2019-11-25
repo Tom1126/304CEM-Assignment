@@ -575,6 +575,7 @@ function toggleLoginVisible(isVisible) {
   document.getElementById('logoutLnk').style.display = isVisible ? 'none' : ''
   document.getElementById('favLnk').style.display = isVisible ? 'none' : ''
   document.getElementById('addDiv').style.display = isVisible ? 'none' : ''
+  document.getElementById('deleteUserFavBtn').style.display = isVisible ? 'none' : ''
 
 }
 
