@@ -570,7 +570,8 @@
            method: "PUT",
            body: JSON.stringify(newKanjiObject),
            headers: {
-             "Content-Type": "application/json;charset=utf-8"
+             "Content-Type": "application/json;charset=utf-8",
+             "x-access-token": sessionStorage.getItem('token')
            }
          })
          .then(result => {
