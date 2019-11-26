@@ -432,6 +432,8 @@ function registerUser() {
       // Clear the user inputs
       document.getElementById('registerEmailTxt').value = ''
       document.getElementById('registerPasswordTxt').value = ''
+      document.getElementById('loginEmailTxt').value = ''
+      document.getElementById('loginPasswordTxt').value = ''
 
       if (Object.is(authResult['error'], true)) {
         Swal.fire({
@@ -440,7 +442,12 @@ function registerUser() {
           text: 'An account using this email has already been created. Please login.'
         })
       } else {
-        makeModalDisapper('register')
+          makeModalDisapper('register')
+          Swal.fire({
+            icon: 'success',
+            title: 'Registration sucessful',
+            text: 'Registratio is completed. Login and start learning today.'
+          })
       }
 
     })
