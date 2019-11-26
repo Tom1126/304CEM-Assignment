@@ -421,7 +421,8 @@
 
  function deleteKanji(encodedString) {
    fetch(`${BASE_URL}/deleteKanji/${encodedString}`, {
-       method: 'DELETE'
+       method: 'DELETE',
+       "x-access-token": sessionStorage.getItem('token')
      })
      .then(() => {
        getKanjiFromDatabase()
@@ -474,7 +475,10 @@
 
  async function deleteAllKanji() {
    fetch(`${BASE_URL}/deleteAllKanji`, {
-       method: 'DELETE'
+       method: 'DELETE',
+       headers: {
+         "x-access-token": sessionStorage.getItem('token')
+       }
      })
      .then(response => {
        return response.json()
