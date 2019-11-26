@@ -148,28 +148,28 @@
  }
 
  const openLogoutModal = () => {
-  logoutModal.classList.remove('fadeOut');
-  logoutModal.classList.add('fadeIn');
-  logoutModal.style.display = 'flex';
+   logoutModal.classList.remove('fadeOut');
+   logoutModal.classList.add('fadeIn');
+   logoutModal.style.display = 'flex';
 
-  const logoutBtn = document.getElementById('logoutBtn')
-  logoutBtn.onclick = () => {
-    logout()
-  }
+   const logoutBtn = document.getElementById('logoutBtn')
+   logoutBtn.onclick = () => {
+     logout()
+   }
  }
 
  for (let i = 0; i < logoutCloseButton.length; i++) {
 
-  const elements = logoutCloseButton[i];
+   const elements = logoutCloseButton[i];
 
-  elements.onclick = (e) => logoutModalClose();
+   elements.onclick = (e) => logoutModalClose();
 
-  logoutModal.style.display = 'none';
+   logoutModal.style.display = 'none';
 
-  window.onclick = function (event) {
-    if (event.target == logoutModal) logoutModalClose();
-  }
-}
+   window.onclick = function (event) {
+     if (event.target == logoutModal) logoutModalClose();
+   }
+ }
 
 
  //Delete all modal end
@@ -422,7 +422,10 @@
  function deleteKanji(encodedString) {
    fetch(`${BASE_URL}/deleteKanji/${encodedString}`, {
        method: 'DELETE',
-       "x-access-token": sessionStorage.getItem('token')
+       headers: {
+         "x-access-token": sessionStorage.getItem('token')
+
+       }
      })
      .then(() => {
        getKanjiFromDatabase()
@@ -452,7 +455,7 @@
      getKanjiFromDatabase()
    } else {
      const encodedString = encodeURIComponent(kanjiToSearch)
-     
+
      fetch(`${BASE_URL}/getSingleKanji/${encodedString}`)
        .then(kanjiSearched => {
          return kanjiSearched.json()
