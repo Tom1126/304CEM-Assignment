@@ -1,6 +1,6 @@
  //Add modal open and close modal
  const BASE_URL = 'https://web-api-assignment-304cem.herokuapp.com'
- 
+
  const addModal = document.querySelector('.add-main-modal');
  const addCloseButton = document.querySelectorAll('.add-modal-close');
 
@@ -135,6 +135,43 @@
    }
  }
 
+ // Logout listeners
+ const logoutModal = document.querySelector('.logout-main-modal')
+ const logoutCloseButton = document.querySelector('.logout-modal-close')
+
+ const logoutModalClose = () => {
+   logoutModal.classList.remove('fadeIn');
+   logoutModal.classList.add('fadeOut');
+   setTimeout(() => {
+     logoutModal.style.display = 'none';
+   }, 500);
+ }
+
+ const openLogoutModal = () => {
+  logoutModal.classList.remove('fadeOut');
+  logoutModal.classList.add('fadeIn');
+  logoutModal.style.display = 'flex';
+
+  const logoutBtn = document.getElementById('logoutBtn')
+  logoutBtn.onclick = () => {
+    logout()
+  }
+ }
+
+ for (let i = 0; i < logoutCloseButton.length; i++) {
+
+  const elements = logoutCloseButton[i];
+
+  elements.onclick = (e) => logoutModalClose();
+
+  logoutModal.style.display = 'none';
+
+  window.onclick = function (event) {
+    if (event.target == logoutModal) logoutModalClose();
+  }
+}
+
+
  //Delete all modal end
  function loadKanjiFromSearch(kanji) {
    resetDiv('kanjisDiv')
@@ -157,10 +194,10 @@
    if (Object.is(jsonKanjiList, null)) {
      //alert('Error loading kanjis from database')
      Swal.fire({
-      icon: 'error',
-      title: 'Error loading kanjis from database',
-      text: 'Loading kanjis from database failed. Please try again later.'
-    })
+       icon: 'error',
+       title: 'Error loading kanjis from database',
+       text: 'Loading kanjis from database failed. Please try again later.'
+     })
    } else {
      loadKanjisToDiv(jsonKanjiList.reverse())
    }
@@ -326,10 +363,10 @@
    if (kanjiToAdd.length > 1) {
      //swal(`Single kanji only`)
      Swal.fire({
-      icon: 'error',
-      title: 'Single Kanji Only',
-      text: 'Please enter only 1 kanji'
-    })
+       icon: 'error',
+       title: 'Single Kanji Only',
+       text: 'Please enter only 1 kanji'
+     })
    } else {
      const encodedTextToAdd = encodeURIComponent(kanjiToAdd)
 
@@ -344,20 +381,20 @@
      if (Object.is(isFromDatabase, "gotError")) {
        //alert('Check if kanji exists in database error. Try again later')
        Swal.fire({
-        icon: 'error',
-        title: 'Check kanji error',
-        text: 'Check if kanji exists in database error. Try again later'
-      })
+         icon: 'error',
+         title: 'Check kanji error',
+         text: 'Check if kanji exists in database error. Try again later'
+       })
        return
      }
 
      if (!Object.is(isFromDatabase, null)) {
        //alert('Kanji already exists in database. Enter another kanji not in database.')
        Swal.fire({
-        icon: 'error',
-        title: 'Kanji already exists in database',
-        text: 'Kanji already exists in database. Please enter another kanji not in database.'
-      })
+         icon: 'error',
+         title: 'Kanji already exists in database',
+         text: 'Kanji already exists in database. Please enter another kanji not in database.'
+       })
        return
      }
 
@@ -371,10 +408,10 @@
        .catch(err => {
          console.error(err)
          Swal.fire({
-          icon: 'error',
-          title: 'Error adding kanji',
-          text: 'Kanji failed to be added to database. Please try again later.'
-        })
+           icon: 'error',
+           title: 'Error adding kanji',
+           text: 'Kanji failed to be added to database. Please try again later.'
+         })
          addModalClose()
        })
 
@@ -393,10 +430,10 @@
      .catch(err => {
        //alert(`An error occured. Error: ${err}`)
        Swal.fire({
-        icon: 'error',
-        title: 'Error deleting kanji',
-        text: 'Kanji failed to be deleted from database. Please try again later.'
-      })
+         icon: 'error',
+         title: 'Error deleting kanji',
+         text: 'Kanji failed to be deleted from database. Please try again later.'
+       })
        deleteModalClose()
      })
  }
@@ -405,11 +442,11 @@
 
    const kanjiToSearch = document.getElementById('searchBox').value.trim()
    if (kanjiToSearch.length > 1) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Single kanji only',
-      text: 'Please enter only 1 kanji.'
-    })
+     Swal.fire({
+       icon: 'error',
+       title: 'Single kanji only',
+       text: 'Please enter only 1 kanji.'
+     })
    } else if (kanjiToSearch.length === 0) {
      getKanjiFromDatabase()
    } else {
@@ -426,11 +463,11 @@
        .catch(err => {
          //alert(`Kanji may not be in database. Please check and add to database if necessary.`)
          Swal.fire({
-          icon: 'error',
-          title: 'Kanji not in database',
-          text: 'Kanji may not be in database. Please check and add to database if necessary.'
-        })
-        getKanjiFromDatabase()
+           icon: 'error',
+           title: 'Kanji not in database',
+           text: 'Kanji may not be in database. Please check and add to database if necessary.'
+         })
+         getKanjiFromDatabase()
        })
    }
  }
@@ -447,10 +484,10 @@
        if (msgObj['error']) {
          //alert(`Deletion error. Something went wrong. Please try again later`)
          Swal.fire({
-          icon: 'error',
-          title: 'Delete all kanjis failed',
-          text: 'Deletion of all kanjis failed. Please try again later.'
-        })
+           icon: 'error',
+           title: 'Delete all kanjis failed',
+           text: 'Deletion of all kanjis failed. Please try again later.'
+         })
          deleteAllModalClose()
        } else {
          getKanjiFromDatabase()
@@ -460,10 +497,10 @@
      .catch(err => {
        //alert('Deletion error. Try again later.')
        Swal.fire({
-        icon: 'error',
-        title: 'Delete all kanjis failed',
-        text: 'Deletion of all kanjis failed. Please try again later.'
-      })
+         icon: 'error',
+         title: 'Delete all kanjis failed',
+         text: 'Deletion of all kanjis failed. Please try again later.'
+       })
        console.error(err)
        deleteAllModalClose()
      })
@@ -507,10 +544,10 @@
    if (newEncodedString.length === 0) {
      //Alerts the user that the kanji field is empty
      Swal.fire({
-      icon: 'error',
-      title: 'No kanji found',
-      text: 'Please enter only 1 kanji.'
-    })
+       icon: 'error',
+       title: 'No kanji found',
+       text: 'Please enter only 1 kanji.'
+     })
      return
    }
 
@@ -545,10 +582,10 @@
          .catch(err => {
            //alert('Update to database error. Try again later')
            Swal.fire({
-            icon: 'error',
-            title: 'Update kanji failed',
-            text: 'Kanji failed to be updated. Please try again later.'
-          })
+             icon: 'error',
+             title: 'Update kanji failed',
+             text: 'Kanji failed to be updated. Please try again later.'
+           })
            console.error(err)
          })
 
@@ -567,20 +604,20 @@
        if (Object.is(isFromDatabase, "gotError")) {
          //alert('Check if kanji exists in database error. Try again later')
          Swal.fire({
-          icon: 'error',
-          title: 'Check kanji failed',
-          text: 'Kanji failed to be checked from database. Please try again later.'
-        })
+           icon: 'error',
+           title: 'Check kanji failed',
+           text: 'Kanji failed to be checked from database. Please try again later.'
+         })
          return
        }
 
        if (!Object.is(isFromDatabase, null)) {
          //alert('Kanji already exists in database. Enter another kanji not in database.')
          Swal.fire({
-          icon: 'error',
-          title: 'Kanji already exists',
-          text: 'Kanji already exists in database. Please enter another kanji not found in database.'
-        })
+           icon: 'error',
+           title: 'Kanji already exists',
+           text: 'Kanji already exists in database. Please enter another kanji not found in database.'
+         })
          return
        }
 
@@ -594,10 +631,10 @@
        if (Object.is(newKanjiDetails, null)) {
          //alert('Invalid kanji. Please enter a valid one and try again')
          Swal.fire({
-          icon: 'error',
-          title: 'Failed to get kanji details',
-          text: 'Kanji details failed to be retrieved. Please try again later.'
-        })
+           icon: 'error',
+           title: 'Failed to get kanji details',
+           text: 'Kanji details failed to be retrieved. Please try again later.'
+         })
          return
        }
 
@@ -609,10 +646,10 @@
        if (Object.is(newKanjiExamples, null)) {
          //alert('Invalid kanji. Please enter a vaid one and try again')
          Swal.fire({
-          icon: 'error',
-          title: 'Delete all kanjis failed',
-          text: 'Deletion of all kanjis failed. Please try again later.'
-        })
+           icon: 'error',
+           title: 'Delete all kanjis failed',
+           text: 'Deletion of all kanjis failed. Please try again later.'
+         })
          return
        }
 
@@ -637,10 +674,10 @@
          .catch(err => {
            //alert('Update to database error. Try again later')
            Swal.fire({
-            icon: 'error',
-            title: 'Update to database failed',
-            text: 'Update to database failed. Please try again later.'
-          })
+             icon: 'error',
+             title: 'Update to database failed',
+             text: 'Update to database failed. Please try again later.'
+           })
            console.error(err)
          })
 
@@ -649,11 +686,11 @@
    } else {
      //alert('Please enter only 1 kanji.')
      Swal.fire({
-      icon: 'error',
-      title: 'Single kanji only',
-      text: 'Please enter only 1 kanji.'
-    })
-    }
+       icon: 'error',
+       title: 'Single kanji only',
+       text: 'Please enter only 1 kanji.'
+     })
+   }
 
  }
 
@@ -662,12 +699,12 @@
   */
  function logout() {
 
-  sessionStorage.removeItem('token')
-  sessionStorage.removeItem('isLogined')
-  sessionStorage.removeItem('userType')
-  sessionStorage.removeItem('email')
-  document.location.href = '/client'
+   sessionStorage.removeItem('token')
+   sessionStorage.removeItem('isLogined')
+   sessionStorage.removeItem('userType')
+   sessionStorage.removeItem('email')
+   document.location.href = '/client'
 
-}
+ }
 
  document.onload = getKanjiFromDatabase()
