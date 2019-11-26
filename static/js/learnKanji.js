@@ -137,7 +137,7 @@
 
  // Logout listeners
  const logoutModal = document.querySelector('.logout-main-modal')
- const logoutCloseButton = document.querySelector('.logout-modal-close')
+ const logoutCloseButton = document.querySelectorAll('.logout-modal-close')
 
  const logoutModalClose = () => {
    logoutModal.classList.remove('fadeIn');
@@ -451,7 +451,7 @@
      getKanjiFromDatabase()
    } else {
      const encodedString = encodeURIComponent(kanjiToSearch)
-     console.log(`Encodedstring: ${encodedString}`)
+     
      fetch(`${BASE_URL}/getSingleKanji/${encodedString}`)
        .then(kanjiSearched => {
          return kanjiSearched.json()
