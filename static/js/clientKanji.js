@@ -412,6 +412,34 @@ function registerUser() {
 
   const emailToRegister = document.getElementById('registerEmailTxt').value
   const passwordToRegister = document.getElementById('registerPasswordTxt').value
+  const confirmPasswordToRegister = document.getElementById('confirmRegisterPasswordTxt').value
+
+  if(Object.is(emailToRegister.trim(), '')) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Email is empty',
+      text: 'Email is empty. Please enter an email'
+    })
+    return
+  }
+
+  if(Object.is(passwordToRegister.trim(), '') || Object.is(confirmPasswordToRegister.trim(), '')) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Password is empty',
+      text: 'Please enter the new password'
+    })
+    return
+  }
+
+  if(!Object.is(passwordToRegister.trim(), confirmPasswordToRegister.trim())) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Passwords do not match',
+      text: 'Please check both passwords and try again'
+    })
+    return
+  }
 
   const registerObj = {
     "email": emailToRegister,

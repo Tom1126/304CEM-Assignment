@@ -505,10 +505,10 @@
    const newMeanings = document.getElementById(`newMeaningsTextBox${index}`).value
 
    if (newEncodedString.length === 0) {
-     alert('Please enter a single kanji.')
+     //Alerts the user that the kanji field is empty
      Swal.fire({
       icon: 'error',
-      title: 'Single kanji only',
+      title: 'No kanji found',
       text: 'Please enter only 1 kanji.'
     })
      return
@@ -665,6 +665,7 @@
   sessionStorage.removeItem('token')
   sessionStorage.removeItem('isLogined')
   sessionStorage.removeItem('userType')
+  sessionStorage.removeItem('email')
   document.location.href = '/client'
 
 }
